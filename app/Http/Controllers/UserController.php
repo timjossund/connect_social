@@ -48,4 +48,8 @@ class UserController extends Controller
             return view('homepage');
         }
     }
+
+    public function showProfile(User $pizza) {
+        return view('profile', ['username' => $pizza->username, 'posts' => $pizza->posts()->latest()->get()]);
+    }
 }
