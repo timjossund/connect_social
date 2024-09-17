@@ -49,7 +49,7 @@ class UserController extends Controller
         }
     }
 
-    public function showProfile(User $pizza) {
-        return view('profile', ['username' => $pizza->username, 'posts' => $pizza->posts()->latest()->get()]);
+    public function showProfile(User $user) {
+        return view('profile', ['username' => $user->username, 'posts' => $user->posts()->latest()->get()]);
     }
 }

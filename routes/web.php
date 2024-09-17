@@ -15,6 +15,8 @@ Route::post('/logout', [UserController::class, "logout"])->middleware('auth');
 Route::get('/create-post', [PostController::class, "createPost"])->middleware('auth');
 Route::post('/create-post', [PostController::class, "storeNewPost"])->middleware('auth');
 Route::get('/post/{post}', [PostController::class, "showPost"])->middleware('auth');
+Route::delete('/post/{post}', [PostController::class, "delete"])->middleware('auth');
+
 
 //Profile related routes
-Route::get('/profile/{pizza:username}', [UserController::class, "showProfile"])->middleware('auth');
+Route::get('/profile/{user:username}', [UserController::class, "showProfile"])->middleware('auth');

@@ -31,4 +31,13 @@ class PostController extends Controller
         $post['body'] = Str::markdown($post->body);
         return view('single-post', ['post' => $post]);
     }
+
+    public function delete(POST $post) {
+        if (auth()->user()->cannot('delete', $post)) {
+            return redirect('profile/' . auth()->user()->username)->with('error', 'You do not have permission to delete this');
+        }
+        $post->delete();
+
+        return redirect('profile/' . auth()->user()->username)->with('success', 'Post successfully deleted');
+    }
 }
