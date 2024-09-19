@@ -5,6 +5,9 @@ namespace App\Http\Controllers;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Validation\Rule;
+use Intervention\Image\ImageManager;
+use Illuminate\Support\Facades\Storage;
+use Intervention\Image\Drivers\Gd\Driver;
 
 class UserController extends Controller
 {
@@ -20,6 +23,36 @@ class UserController extends Controller
         $user = User::create($incomingFields);
         auth()->login($user);
         return redirect('/')->with('success', 'You are registered and logged in!');
+    }
+
+    public function showAvatarForm() {
+        return view('avatar-form');
+    }
+
+    public function saveAvatar(Request $request) {
+        $request->validate([
+            'avatar' => 'required|image|max:8000'
+        ]);
+
+        $user = auth()->user();
+
+        $filename = $user->id . "-" . uniqid() . ".jpg";
+
+        $imgManager = new ImageManager(new Driver());
+        $image = $imgManager->read($request->file('avatar'));
+        $imageData = $image->cover(120, 120)->toJpeg();
+        Storage::put("public/avatars/" . $filename, $imageData); 
+
+        $oldAvatar = $user->avatar;
+
+        $user->avatar = $filename;
+        $user->save();
+
+        if($oldAvatar != "/fallback-avatar.jpg") {
+            Storage::delete(str_replace("/storage/", "public/", $oldAvatar));
+        }
+
+        return redirect('/profile/' . auth()->user()->username)->with('success', 'Avatar Saved!');
     }
 
     public function login(Request $request) {
@@ -50,6 +83,6 @@ class UserController extends Controller
     }
 
     public function showProfile(User $user) {
-        return view('profile', ['username' => $user->username, 'posts' => $user->posts()->latest()->get()]);
+        return view('profile', ['avatar' => $user->avatar, 'username' => $user->username, 'posts' => $user->posts()->latest()->get()]);
     }
 }
