@@ -13,7 +13,9 @@ class postPolicy
      */
     public function viewAny(User $user): bool
     {
-        //
+        if ($user->isAdmin === 1) {
+            return true;
+        }
     }
 
     /**
@@ -21,7 +23,9 @@ class postPolicy
      */
     public function view(User $user, Post $post): bool
     {
-        //
+        if ($user->isAdmin === 1) {
+            return true;
+        }
     }
 
     /**
