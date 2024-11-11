@@ -21,7 +21,7 @@ Route::post('/manage-avatar', [UserController::class, "saveAvatar"])->middleware
 
 //follow related routes
 Route::post('/create-follow/{user:username}', [FollowController::class, "createFollow"])->middleware('auth');
-Route::post('/create-follow/{user:username}', [FollowController::class, "deleteFollow"])->middleware('auth');
+Route::post('/delete-follow/{user:username}', [FollowController::class, "deleteFollow"])->middleware('auth');
 
 //blog related routes
 Route::get('/create-post', [PostController::class, "createPost"])->middleware('auth');
